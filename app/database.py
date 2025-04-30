@@ -9,9 +9,11 @@ load_dotenv()
 MONGO_URI = os.getenv("MONGO_URI")
 DB_NAME = os.getenv("DB_NAME")
 
-if MONGO_URI is None:
-    raise ValueError("MONGO_URI environment variable not set in .env file.")
-if DB_NAME is None:
+if not MONGO_URI:
+    raise ValueError("MONGO_URI environment variable not set. Ensure it's defined in Railway variables or a .env file.")
+
+if not DB_NAME:
+    raise ValueError("DB_NAME environment variable not set. Ensure it's defined in Railway variables or a .env file.")
     DB_NAME = "walletApp"
 
 client = AsyncIOMotorClient(MONGO_URI) 
