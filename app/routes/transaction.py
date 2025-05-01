@@ -203,8 +203,8 @@ class GetTransaction(BaseModel):
     username:str
 
 @router.get("/getRecentTransactions")
-async def getTransaction(request:GetTransaction=Body(...)):
-    username=request.username
+async def getTransaction(username:str):
+    username=await getuserByusername(username)
     user=await getuserByusername(username)
     if not user:
         raise HTTPException(status_code=404, detail="User does not exist")
