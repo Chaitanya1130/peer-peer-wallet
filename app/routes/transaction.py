@@ -210,4 +210,12 @@ async def getTransaction(request:GetTransaction=Body(...)):
         raise HTTPException(status_code=404, detail="User does not exist")
     else:
         transactions = await transaction_collection.find({"$or": [{"sender_username": username}, {"receiver_username": username}]}).to_list(length=1)
-        return transactions
+        return TransactioninDB(
+            sender_username=transactions[0]["sender_username"],
+            sender_email=transactions[0]["sender_email"],
+            sender_balance=transactions[0]["sender_balance"],
+            receiver_username=transactions[0]["receiver_username"],
+            receiver_email=transactions[0]["receiver_email"],
+            receiver_balance=transactions[0]["receiver_balance"],
+            amount=transactions[0]["amount"]
+        )
