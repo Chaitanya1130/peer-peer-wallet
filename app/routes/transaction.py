@@ -203,7 +203,7 @@ class GetTransaction(BaseModel):
     username:str
 
 @router.get("/getRecentTransactions")
-async def getTransaction(username:str):
+async def getTransaction(username:str=Query(..., description="Username of the user to retrieve")):
     username=await getuserByusername(username)
     user=await getuserByusername(username)
     if not user:
