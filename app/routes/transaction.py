@@ -198,3 +198,16 @@ async def creditThemMoney(request:CreditBetweenTwopeople=Body(...)):
         receiver_balance=new_balanceForreceiver,
         amount=amount
     )
+
+class GetTransaction(BaseModel):
+    username:str
+
+@router.get("/getRecentTransactions")
+async def getTransaction(request:GetTransaction=Body(...)):
+    username=request.username
+    user=await getuserByusername(username)
+    if not user:
+        raise HTTPException(status_code=404, detail="User does not exist")
+    else:
+        transactions = await transaction_collection.find({"$or": [{"sender_username": username}, {"receiver_username": username}]}).to_list(length=1)
+        return transactions
