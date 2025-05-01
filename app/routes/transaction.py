@@ -203,19 +203,36 @@ class GetTransaction(BaseModel):
     username:str
 
 @router.get("/getRecentTransactions")
-async def getTransaction(username:str=Query(..., description="Username of the user to retrieve")):
-    user=await getuserByusername(username)
-    # user=await getuserByusername(username)
+async def getTransaction(username: str = Query(..., description="Username of the user to retrieve")):
+    # Add logging to debug
+    print(f"Received request for username: {username}")
+    
+    # Debug user lookup
+    user = await getuserByusername(username)
+    print(f"User lookup result: {user}")
+    
     if not user:
+        print("User not found, raising 404")
         raise HTTPException(status_code=404, detail="User does not exist")
-    else:
-        transactions = await transaction_collection.find({"$or": [{"sender_username": username}, {"receiver_username": username}]}).to_list(length=1)
-        return TransactioninDB(
-            sender_username=transactions[0]["sender_username"],
-            sender_email=transactions[0]["sender_email"],
-            sender_balance=transactions[0]["sender_balance"],
-            receiver_username=transactions[0]["receiver_username"],
-            receiver_email=transactions[0]["receiver_email"],
-            receiver_balance=transactions[0]["receiver_balance"],
-            amount=transactions[0]["amount"]
-        )
+    
+    # Debug transaction lookup
+    query = {"$or": [{"sender_username": username}, {"receiver_username": username}]}
+    print(f"Transaction query: {query}")
+    
+    transactions = await transaction_collection.find(query).to_list(length=1)
+    print(f"Transactions found: {len(transactions)}")
+    
+    if not transactions:
+        print("No transactions found, raising 404")
+        raise HTTPException(status_code=404, detail="No transactions found for this user")
+    
+    # Return transaction if found
+    return TransactioninDB(
+        sender_username=transactions[0]["sender_username"],
+        sender_email=transactions[0]["sender_email"],
+        sender_balance=transactions[0]["sender_balance"],
+        receiver_username=transactions[0]["receiver_username"],
+        receiver_email=transactions[0]["receiver_email"],
+        receiver_balance=transactions[0]["receiver_balance"],
+        amount=transactions[0]["amount"]
+    )
