@@ -1,13 +1,13 @@
-dnspython==2.7.0
-motor==3.7.0
-pymongo==4.12.0
-pydantic==1.10.7
-python-dotenv==1.0.0
+dnspython
+motor
+pymongo
+pydantic
+python-dotenv
 
-uvicorn==0.22.0
-fastapi==0.102.0
-pytest==7.4.2
-httpx==0.25.0
-pytest-asyncio==0.21.0
+uvicorn
+fastapi
+pytest
+httpx
+pytest-asyncio
 langchain_ollama
 langchain
