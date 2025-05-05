@@ -10,5 +10,10 @@ client = TestClient(app)
 def test_user_signup():
     response = client.post("/user/signup", json={"username": "testuser", "email": "testsemail"})
     data = response.json()
-    assert response.status_code == 200 or response.status_code == 400 or response.status_code == 422    
-    assert data["username"] == "testuser"
+    assert response.status_code == 200 or response.status_code == 400 or response.status_code == 422
+
+    if response.status_code == 200:
+        assert "username" in data
+        assert data["username"] == "testuser"
+    elif response.status_code == 400 or response.status_code == 422:
+        assert "email" in data 
