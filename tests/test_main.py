@@ -16,4 +16,12 @@ def test_user_signup():
         assert "username" in data
         assert data["username"] == "testuser"
     elif response.status_code == 400 or response.status_code == 422:
-        assert "email" in data 
+        assert "detail" in data
+        assert isinstance(data["detail"], list)
+        assert len(data["detail"]) > 0
+        password_error_found = False
+        for error in data["detail"]:
+            if error.get("loc") == ["body", "password"] and error.get("msg") == "Field required":
+                password_error_found = True
+                break
+        assert password_error_found
